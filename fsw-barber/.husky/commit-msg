@@ -1,0 +1,15 @@
+.git/hooks/commit-msg $1
+
+# Recommended Commit Message Format
+# <type>(<scope>): <short summary>
+#   │       │             │
+#   │       │             └─⫸ Summary in present tense. Not capitalized. No period at the end.
+#   │       │
+#   │       └─⫸ Commit Scope: Optional, can be anything specifying the scope of the commit change.
+#   |                          For example $location|$browser|$compile|$rootScope|ngHref|ngClick|ngView, etc.
+#   |                          In App Development, scope can be a page, a module or a component.
+#   │
+#   └─⫸ Commit Type: feat|fix|docs|style|refactor|test|chore|perf|ci|build|temp
+
+# BAD: 'Correct spelling of CHANGELOG.';
+# GOOD: 'docs: correct spelling of CHANGELOG' / 'docs(CHANGELOG): correct spelling'
