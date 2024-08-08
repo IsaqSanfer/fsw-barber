@@ -27,7 +27,6 @@ const ServiceItem = ({ service }: ServiceItemProps) => {
             </p>
             <Button type="button" size="sm" variant="secondary">Reservar</Button>
           </div>
-
         </div>
       </CardContent>
     </Card>
