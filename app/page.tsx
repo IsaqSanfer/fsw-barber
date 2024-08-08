@@ -3,16 +3,20 @@ import Header from "./_components/header";
 import { Button } from "./_components/ui/button";
 import { Input } from "./_components/ui/input";
 import Image from "next/image";
-import { Card, CardContent } from "./_components/ui/card";
-import { Avatar, AvatarImage } from "./_components/ui/avatar";
-import { Badge } from "./_components/ui/badge";
 import { db } from "./_lib/prisma";
 import BarbershopItem from "./_components/barbershop-item";
+import Footer from "./_components/footer";
+import { quickSearchOptions } from "./_constants/search";
+import BookingItem from "./_components/booking-item";
 
 const Home = async () => {
   // chamando banco temporariamente
   const barbershops = await db.barbershop.findMany({})
-  console.log({ barbershops })
+  const popularBarbershops = await db.barbershop.findMany({
+    orderBy: {
+      name: "desc"
+    }
+  })
 
   return (
     <div>
@@ -31,6 +35,16 @@ const Home = async () => {
           </Button>
         </div>
 
+        {/* BUSCA RÁPIDA */}
+        <div className="mt-6 flex gap-3 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
+          {quickSearchOptions.map((option) => (
+            <Button variant={"secondary"} className="gap-2" key={option.title}>
+              <Image width={16} height={16} src={option.imageUrl} alt={option.title} />
+              {option.title} 
+            </Button>
+          ))}
+        </div>
+
         {/* BANNER */}
         <div className="relative mt-6 h-[150px] w-full">
           <Image
@@ -42,32 +56,7 @@ const Home = async () => {
         </div>
 
         {/* AGENDAMENTO */}
-        <h2 className="mt-6 text-xs font-bold uppercase text-gray-400">
-          Agendamentos
-        </h2>
-        <Card className="mt-3">
-          <CardContent className="flex justify-between p-0">
-            {/* LEFT ITEM */}
-            <div className="flex flex-col gap-2 p-5 pr-0">
-              <Badge className="w-fit">Confirmado</Badge>
-              <h3 className="font-semibold">Corte de Cabelo</h3>
-
-              <div className="flex items-center gap-2">
-                <Avatar className="h-6 w-6">
-                  <AvatarImage src="https://utfs.io/f/c97a2dc9-cf62-468b-a851-bfd2bdde775f-16p.png" />
-                </Avatar>
-                <p className="text-sm">Barbearia FSW</p>
-              </div>
-            </div>
-
-            {/* RIGHT ITEM */}
-            <div className="flex flex-col items-center justify-center border-l-2 border-solid px-5">
-              <p className="text-sm">Agosto</p>
-              <p className="text-2xl">05</p>
-              <p className="text-sm">20:00</p>
-            </div>
-          </CardContent>
-        </Card>
+        <BookingItem />
 
         {/* BARBEARIAS */}
         <h2 className="mt-6 text-xs font-bold uppercase text-gray-400">
@@ -78,7 +67,18 @@ const Home = async () => {
             <BarbershopItem key={barbershop.id} barbershop={barbershop} />
           ))}
         </div>
+
+        {/* BARBEARIAS (ORDENADAS) */}
+        <h2 className="mt-6 text-xs font-bold uppercase text-gray-400">
+          Mais Populares
+        </h2>
+        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+          {popularBarbershops.map((barbershop) => (
+            <BarbershopItem key={barbershop.id} barbershop={barbershop} />
+          ))}
+        </div>
       </div>
+      <Footer />
     </div>
   )
 }
