@@ -10,7 +10,7 @@ const Header = () => {
     <Card>
       <CardContent className="flex flex-row items-center justify-between p-5">
         <Image width={120} height={18} alt="FSW Barber" src={"/logo.png"} />
-
+        
         <Sheet>
           <SheetTrigger asChild>
             <Button size={"icon"} variant={"outline"} aria-label="Open Menu">
