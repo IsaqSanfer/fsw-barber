@@ -1,8 +1,6 @@
 import NextAuth from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client"
 import { db } from "@/app/_lib/prisma"
 import { Adapter } from "next-auth/adapters"
 

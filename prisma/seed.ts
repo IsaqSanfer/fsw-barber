@@ -40,7 +40,7 @@ async function seedDatabase() {
       "Estilo Urbano",
       "Estilo Clássico",
     ];
-
+  
     // Endereços fictícios para as barbearias
     const addresses = [
       "Rua da Barbearia, 123",
