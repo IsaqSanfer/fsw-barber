@@ -15,6 +15,7 @@ import {
   DialogTrigger,
 } from "./ui/dialog"
 import { signIn, signOut, useSession } from "next-auth/react"
+import Link from "next/link"
 
 const SidebarSheet = () => {
   const { data } = useSession()
@@ -58,7 +59,11 @@ const SidebarSheet = () => {
                   </DialogDescription>
                 </DialogHeader>
 
-                <Button variant={"outline"} className="gap-1 font-bold" onClick={handleLoginWithGoogleClick}>
+                <Button
+                  variant={"outline"}
+                  className="gap-1 font-bold"
+                  onClick={handleLoginWithGoogleClick}
+                >
                   <Image
                     width={18}
                     height={18}
@@ -90,20 +95,27 @@ const SidebarSheet = () => {
             key={option.title}
             className="justify-start gap-2"
             variant={"ghost"}
+            asChild
           >
-            <Image
-              width={18}
-              height={18}
-              src={option.imageUrl}
-              alt={option.title}
-            />
-            {option.title}
+            <Link href={`/barbershops?search=${option.title}`}>
+              <Image
+                width={18}
+                height={18}
+                src={option.imageUrl}
+                alt={option.title}
+              />
+              {option.title}
+            </Link>
           </Button>
         ))}
       </div>
 
       <div className="flex flex-col gap-4 border-b border-solid p-5 py-5">
-        <Button className="justify-start gap-2" variant={"ghost"} onClick={handleLogoutClick}>
+        <Button
+          className="justify-start gap-2"
+          variant={"ghost"}
+          onClick={handleLogoutClick}
+        >
           <LogOutIcon size={18} /> Sair da Conta
         </Button>
       </div>
