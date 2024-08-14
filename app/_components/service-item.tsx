@@ -124,7 +124,7 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
         hours: hour,
       })
       await createBooking({
-        userId: (data?.user as any).id, //userId: "clzoquhgj000010cugr39fbkn",
+        //userId: (data?.user as any).id,   --passado a utilizar da sessão logada
         serviceId: service.id,
         date: newDate,
       })
