@@ -6,12 +6,8 @@ import { SheetClose, SheetContent, SheetHeader, SheetTitle } from "./ui/sheet"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { quickSearchOptions } from "../_constants/search"
 import Image from "next/image"
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "./ui/dialog"
-import { signIn, signOut, useSession } from "next-auth/react"
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog"
+import { signOut, useSession } from "next-auth/react"
 import Link from "next/link"
 import SignInDialog from "./sign-in-dialog"
 
@@ -30,7 +26,9 @@ const SidebarSheet = () => {
           <div className="flex items-center gap-2">
             <Avatar>
               <AvatarImage src={data.user.image ?? ""} alt="Perfil" />
-              <AvatarFallback>US</AvatarFallback>
+              <AvatarFallback>{
+                (data.user.name)?.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase()
+              }</AvatarFallback>
             </Avatar>
 
             <div className="text-start">
@@ -61,8 +59,10 @@ const SidebarSheet = () => {
             <HomeIcon size={18} /> Início
           </Button>
         </SheetClose>
-        <Button className="justify-start gap-2" variant={"ghost"}>
-          <CalendarIcon size={18} /> Agendamentos
+        <Button className="justify-start gap-2" variant={"ghost"} asChild>
+          <Link href={"/bookings"}>
+            <CalendarIcon size={18} /> Agendamentos
+          </Link>
         </Button>
       </div>
 
