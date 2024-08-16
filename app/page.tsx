@@ -10,6 +10,9 @@ import BookingItem from "./_components/booking-item"
 import Search from "./_components/search"
 import { getServerSession } from "next-auth"
 import { authOptions } from "./_lib/auth"
+import { format } from "date-fns"
+import { ptBR } from "date-fns/locale"
+import Link from "next/link"
 //import { useSession } from "next-auth/react";
 
 const Home = async () => {
@@ -49,9 +52,10 @@ const Home = async () => {
       <Header />
       <div className="p-5">
         {/* WELCOME */}
-        {/* <h2 className="text-xl font-bold">Olá{data?.user ? `, ${data.user.name}!` : "! Bem vindo!"}</h2> */}
-        <h2 className="text-xl font-bold">Olá, Miguelito!</h2>
-        <p>Segunda-feira, 05 de agosto</p>
+        <h2 className="text-xl font-bold">Olá{session?.user ? `, ${session.user.name}!` : "! Bem vindo!"}</h2>        
+        <p><span className="capitalize">{format(new Date(), "EEEE, ", { locale: ptBR })}</span>
+          {format(new Date(), "dd 'de' MMMM", { locale: ptBR })}
+        </p>
 
         {/* BUSCA */}
         <div className="mt-6">

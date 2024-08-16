@@ -10,6 +10,6 @@ export const deleteBooking = async (bookingId: string) => {
     },
   })
 
-  //força o recarregamento da página (e não do navegador) para atualizar as informações
+  //força que, no post, atualize as informações
   revalidatePath("/bookings")
 }
