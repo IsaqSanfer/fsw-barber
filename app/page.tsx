@@ -10,6 +10,8 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "./_lib/auth"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
+import { getConfirmedBookings } from "./_data/get-confirmed-bookings"
+import Link from "next/link"
 
 const Home = async () => {
   //chamando sessão, capturar username
@@ -22,25 +24,7 @@ const Home = async () => {
       name: "desc",
     },
   })
-
-  const confirmedBookings = session?.user
-    ? await db.booking.findMany({
-        where: {
-          userId: (session?.user as any).id,
-          date: {
-            gte: new Date()
-          }
-        },
-        include: {
-          service: {
-            include: { barbershop: true },
-          },
-        },
-        orderBy: {
-          date: 'asc'
-        },
-      })
-    : []
+  const confirmedBookings = await getConfirmedBookings()
 
   return (
     <div>
@@ -48,8 +32,13 @@ const Home = async () => {
       <Header />
       <div className="p-5">
         {/* WELCOME */}
-        <h2 className="text-xl font-bold">Olá{session?.user ? `, ${session.user.name}!` : "! Bem vindo!"}</h2>        
-        <p><span className="capitalize">{format(new Date(), "EEEE, ", { locale: ptBR })}</span>
+        <h2 className="text-xl font-bold">
+          Olá{session?.user ? `, ${session.user.name}!` : "! Bem vindo!"}
+        </h2>
+        <p>
+          <span className="capitalize">
+            {format(new Date(), "EEEE, ", { locale: ptBR })}
+          </span>
           {format(new Date(), "dd 'de' MMMM", { locale: ptBR })}
         </p>
 
@@ -61,14 +50,21 @@ const Home = async () => {
         {/* BUSCA RÁPIDA */}
         <div className="mt-6 flex gap-3 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
           {quickSearchOptions.map((option) => (
-            <Button variant={"secondary"} className="gap-2" key={option.title}>
-              <Image
-                width={16}
-                height={16}
-                src={option.imageUrl}
-                alt={option.title}
-              />
-              {option.title}
+            <Button
+              className="gap-2"
+              variant="secondary"
+              key={option.title}
+              asChild
+            >
+              <Link href={`/barbershops?service=${option.title}`}>
+                <Image
+                  src={option.imageUrl}
+                  width={16}
+                  height={16}
+                  alt={option.title}
+                />
+                {option.title}
+              </Link>
             </Button>
           ))}
         </div>
@@ -84,14 +80,21 @@ const Home = async () => {
         </div>
 
         {/* AGENDAMENTO */}
-        <h2 className="mt-6 text-xs font-bold uppercase text-gray-400">
-          Agendamentos
-        </h2>
-        <div className="flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden">
-          {confirmedBookings.map((booking) => (
-            <BookingItem key={booking.id} booking={booking} />
-          ))}
-        </div>
+        {confirmedBookings.length > 0 && (
+          <>
+            <h2 className="mt-6 text-xs font-bold uppercase text-gray-400">
+              Agendamentos
+            </h2>
+            <div className="flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden">
+              {confirmedBookings.map((booking) => (
+                <BookingItem
+                  key={booking.id}
+                  booking={JSON.parse(JSON.stringify(booking))}
+                />
+              ))}
+            </div>
+          </>
+        )}
 
         {/* BARBEARIAS */}
         <h2 className="mt-6 text-xs font-bold uppercase text-gray-400">
