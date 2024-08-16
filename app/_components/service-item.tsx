@@ -14,7 +14,6 @@ import {
 import { Calendar } from "./ui/calendar"
 import { ptBR } from "date-fns/locale"
 import { useEffect, useMemo, useState } from "react"
-import { addDays, isPast, isToday, set } from "date-fns"
 import { createBooking } from "../_actions/create-booking"
 import { useSession } from "next-auth/react"
 import { toast } from "sonner"
@@ -22,8 +21,8 @@ import { getBookings } from "../_actions/get-bookings"
 import { Dialog, DialogContent } from "./ui/dialog"
 import SignInDialog from "./sign-in-dialog"
 import BookingSummary from "./booking-summary"
-import router from "next/router"
 import { useRouter } from "next/navigation"
+import { isPast, isToday, set } from "date-fns"
 
 interface ServiceItemProps {
   service: BarbershopService
@@ -59,11 +58,11 @@ const TIME_LIST = [
   "18:00",
 ]
 
-const getTimeList = ({bookings, selectedDay}: GetTimeListProps) => {
+const getTimeList = ({ bookings, selectedDay }: GetTimeListProps) => {
   return TIME_LIST.filter((time) => {
     const hour = Number(time.split(":")[0])
     const minutes = Number(time.split(":")[1])
-    
+
     const timeIsOnThePast = isPast(set(new Date(), { hours: hour, minutes }))
     if (timeIsOnThePast && isToday(selectedDay)) {
       return false
@@ -87,7 +86,9 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
   const { data } = useSession()
 
   const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined)
-  const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined)
+  const [selectedTime, setSelectedTime] = useState<string | undefined>(
+    undefined,
+  )
   const [dayBookings, setDayBookings] = useState<Booking[]>([])
 
   const [signInDialogIsOpen, setSignInDialogIsOpen] = useState(false)
@@ -204,7 +205,7 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                   <SheetHeader>
                     <SheetTitle>Fazer Reserva</SheetTitle>
                   </SheetHeader>
-                  
+
                   <div className="border-b border-solid py-5">
                     <Calendar
                       mode="single"
@@ -242,23 +243,39 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                     <div className="flex gap-3 overflow-x-auto border-b border-solid p-5 [&::-webkit-scrollbar]:hidden">
                       {timeList.length > 0 ? (
                         timeList.map((time) => (
-                          <Button key={time} variant={selectedTime === time ? "default" : "outline"} className="rounded-full" onClick={() => handleTimeSelect(time)}>
+                          <Button
+                            key={time}
+                            variant={
+                              selectedTime === time ? "default" : "outline"
+                            }
+                            className="rounded-full"
+                            onClick={() => handleTimeSelect(time)}
+                          >
                             {time}
                           </Button>
                         ))
                       ) : (
-                        <p className="text-xs">Não há horários disponíveis para este dia.</p>
+                        <p className="text-xs">
+                          Não há horários disponíveis para este dia.
+                        </p>
                       )}
                     </div>
                   )}
 
                   {selectedDate && (
                     <div className="p-5">
-                      <BookingSummary barbershop={barbershop} service={service} selectedDate={selectedDate} />
+                      <BookingSummary
+                        barbershop={barbershop}
+                        service={service}
+                        selectedDate={selectedDate}
+                      />
                     </div>
                   )}
                   <SheetFooter className="mt-5 px-5">
-                    <Button onClick={handleCreateBooking} disabled={!selectedDay || !selectedTime}>
+                    <Button
+                      onClick={handleCreateBooking}
+                      disabled={!selectedDay || !selectedTime}
+                    >
                       Confirmar
                     </Button>
                   </SheetFooter>
@@ -269,7 +286,10 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
         </CardContent>
       </Card>
 
-      <Dialog open={signInDialogIsOpen} onOpenChange={(open) => setSignInDialogIsOpen(open)}>
+      <Dialog
+        open={signInDialogIsOpen}
+        onOpenChange={(open) => setSignInDialogIsOpen(open)}
+      >
         <DialogContent className="w-[90%]">
           <SignInDialog />
         </DialogContent>
