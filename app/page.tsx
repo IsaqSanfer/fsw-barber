@@ -1,7 +1,5 @@
-import { SearchIcon } from "lucide-react"
 import Header from "./_components/header"
 import { Button } from "./_components/ui/button"
-import { Input } from "./_components/ui/input"
 import Image from "next/image"
 import { db } from "./_lib/prisma"
 import BarbershopItem from "./_components/barbershop-item"
@@ -12,8 +10,6 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "./_lib/auth"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
-import Link from "next/link"
-//import { useSession } from "next-auth/react";
 
 const Home = async () => {
   //chamando sessão, capturar username
